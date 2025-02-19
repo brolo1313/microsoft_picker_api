@@ -8,6 +8,7 @@ import { msalConfig } from '../configs/msal-config';
 export class MsalService {
   private msalInstance: Msal.PublicClientApplication;
 
+  private tokenResponse: any;
   constructor() {
     // Ініціалізація MSAL
     this.msalInstance = new Msal.PublicClientApplication(msalConfig);
@@ -21,13 +22,13 @@ export class MsalService {
   }
 
   // Метод для логіну
-  login() {
-    // Переконатися, що MSAL ініціалізовано перед викликом
+  async login() {
     if (!this.msalInstance.getAllAccounts().length) {
       this.msalInstance
         .loginPopup()  // Використовуємо попап для логіну
         .then((response) => {
           console.log('Logged in successfully:', response);
+          console.log('this.msalInstance', this.msalInstance);
         })
         .catch((error) => {
           console.log('Login failed:', error);
@@ -35,13 +36,32 @@ export class MsalService {
     }
   }
 
-  // Перевірка, чи є увійшов користувач
+  async fetchToken() {
+    try {
+      const acquiredToken = await this.msalInstance.acquireTokenSilent({
+        // scopes: ["openid", "profile"]
+        scopes: ['User.Read', 'Files.Read.All'], // Scopes required for OneDrive
+      });
+      this.tokenResponse = acquiredToken;
+      return acquiredToken;
+    } catch (error) {
+      console.error('Error acquiring token:', error);
+      return null;
+    }
+  }
+  
+
   getAccount() {
     const accounts = this.msalInstance.getAllAccounts();
+    const activeAccount = this.msalInstance.getActiveAccount()
+    this.msalInstance.setActiveAccount(accounts[0]);
+    console.log('activeAccount', activeAccount);
+    console.log('accounts', accounts);
+    
     return accounts.length > 0 ? accounts[0] : null;
+
   }
 
-  // Логіка для виходу з системи
   logout() {
     const account = this.getAccount();
     if (account) {

@@ -24,24 +24,39 @@ export class OneDrivePickerComponent implements OnInit {
   }
 
   openPicker() {
-    const account = this.msalService.getAccount();
-    if (!account) {
-      console.log('Please login first!');
+    const userAccount = this.msalService.getAccount();
+
+    if (!userAccount) {
+      console.log('Please log in first!');
       this.msalService.login();
       return;
     }
 
-    console.log('OneDrive', OneDrive);
-    console.log('account', account);
-   
-    
+
+    // Fetch the token before opening the picker
+    this.msalService.fetchToken().then((data: any) => {
+      if (data) {
+        this.launchOneDrivePicker(data?.accessToken);
+        console.log('Token fetched:', data);
+      }
+
+    }).catch((error) => {
+      console.error('Failed to fetch token:', error);
+    });
+  }
+
+
+  launchOneDrivePicker(accessToken?: string) {
     OneDrive.open({
-      clientId: '',
-      action: 'share',
+      clientId: '3aa59b9e-5bf4-4d0c-8834-c9b7987e7e5e', // SPA Client ID
+      // clientId: 'bf778942-64c1-4509-82a5-e6f59821e4e5', // web client id
+      action: 'share', // Action for picker
+      // accessToken: accessToken,
       // multiSelect: true,
       // advanced: {
       //   redirectUri: "http://localhost:4200",
       // },
+      // filter:"folder,.pptx,.jpeg,.jpg",
       success: (files: any) => {
         console.log('Selected files:', files);
       },
@@ -61,6 +76,13 @@ export class OneDrivePickerComponent implements OnInit {
   }
 
   logout() {
+    const account = this.msalService.getAccount();
+    if (!account) {
+      console.log('No account found');
+      return;
+    }
+
     this.msalService.logout();
+
   }
 }

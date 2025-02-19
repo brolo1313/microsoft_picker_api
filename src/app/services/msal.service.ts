@@ -21,11 +21,12 @@ export class MsalService {
     });
   }
 
-  // Метод для логіну
   async login() {
     if (!this.msalInstance.getAllAccounts().length) {
       this.msalInstance
-        .loginPopup()  // Використовуємо попап для логіну
+        .loginPopup({
+          scopes: ['User.Read', 'Files.Read.All'],
+        })  // Використовуємо попап для логіну
         .then((response) => {
           console.log('Logged in successfully:', response);
           console.log('this.msalInstance', this.msalInstance);
@@ -38,9 +39,16 @@ export class MsalService {
 
   async fetchToken() {
     try {
+      const account = this.getAccount();
+      if (!account) {
+        console.error('No active account found');
+        return null;
+      }
+
       const acquiredToken = await this.msalInstance.acquireTokenSilent({
         // scopes: ["openid", "profile"]
         scopes: ['User.Read', 'Files.Read.All'], // Scopes required for OneDrive
+        account: account,
       });
       this.tokenResponse = acquiredToken;
       return acquiredToken;
@@ -53,11 +61,6 @@ export class MsalService {
 
   getAccount() {
     const accounts = this.msalInstance.getAllAccounts();
-    const activeAccount = this.msalInstance.getActiveAccount()
-    this.msalInstance.setActiveAccount(accounts[0]);
-    console.log('activeAccount', activeAccount);
-    console.log('accounts', accounts);
-    
     return accounts.length > 0 ? accounts[0] : null;
 
   }

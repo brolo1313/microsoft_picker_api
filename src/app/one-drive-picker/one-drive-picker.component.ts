@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MsalService } from '../services/msal.service';
 
-declare var OneDrive: any; // Декларація OneDrive SDK
+const LIBRARY_URL = 'https://js.live.net/v7.2/OneDrive.js';
+
+declare const OneDrive: any; // Декларація OneDrive SDK
 
 @Component({
   selector: 'app-one-drive-picker',
@@ -9,27 +11,56 @@ declare var OneDrive: any; // Декларація OneDrive SDK
   templateUrl: './one-drive-picker.component.html',
   styleUrl: './one-drive-picker.component.scss'
 })
-export class OneDrivePickerComponent {
+export class OneDrivePickerComponent implements OnInit {
   constructor(private msalService: MsalService) { }
+
+  ngOnInit() {
+    const script = document.createElement('script');
+    script.src = LIBRARY_URL;
+    script.onload = () => {
+      console.log('OneDrive SDK loaded');
+    };
+    document.body.appendChild(script);
+  }
 
   openPicker() {
     const account = this.msalService.getAccount();
     if (!account) {
       console.log('Please login first!');
+      this.msalService.login();
       return;
     }
 
-    // Налаштування для OneDrive Picker
+    console.log('OneDrive', OneDrive);
+    console.log('account', account);
+   
+    
     OneDrive.open({
-      clientId: 'YOUR_CLIENT_ID', // Ваш Client ID
+      clientId: '',
       action: 'share',
-      multiSelect: true,
-      success: (files:any) => {
+      // multiSelect: true,
+      // advanced: {
+      //   redirectUri: "http://localhost:4200",
+      // },
+      success: (files: any) => {
         console.log('Selected files:', files);
       },
       cancel: () => {
         console.log('Picker was closed');
       },
+      error: (error: any) => {
+        console.error('Error in picker:', error);
+        if (error.data) {
+          console.error('Error data:', error.data);
+        }
+        if (error.message) {
+          console.error('Error message:', error.message);
+        }
+      },
     });
+  }
+
+  logout() {
+    this.msalService.logout();
   }
 }

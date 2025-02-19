@@ -36,7 +36,7 @@ export class OneDrivePickerComponent implements OnInit {
     // Fetch the token before opening the picker
     this.msalService.fetchToken().then((data: any) => {
       if (data) {
-        this.launchOneDrivePicker(data?.accessToken);
+        this.launchOneDrivePicker(data?.idToken);
         console.log('Token fetched:', data);
       }
 
@@ -50,14 +50,16 @@ export class OneDrivePickerComponent implements OnInit {
     console.log('OneDrive', OneDrive);
     console.log('accessToken:', accessToken);
     OneDrive.open({
-      clientId: '3aa59b9e-5bf4-4d0c-8834-c9b7987e7e5e', // SPA Client ID
-      // clientId: 'bf778942-64c1-4509-82a5-e6f59821e4e5', // web client id
+      clientId: '', // SPA Client ID
       action: 'query', // Action for picker query,  share,  download
       accessToken: accessToken,
-      multiSelect: true,
+      multiSelect: false,
       advanced: {
-        redirectUri: "http://localhost:4200",
+        endpointHint: "api.onedrive.com",
       },
+      // advanced: {
+      //   redirectUri: "http://localhost:4200",
+      // },
       // filter:"folder,.pptx,.jpeg,.jpg",
       success: (files: any) => {
         console.log('Selected files:', files);

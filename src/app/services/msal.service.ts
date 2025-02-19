@@ -45,13 +45,15 @@ export class MsalService {
         return null;
       }
 
-      const acquiredToken = await this.msalInstance.acquireTokenSilent({
-        // scopes: ["openid", "profile"]
-        scopes: ['User.Read', 'Files.Read.All'], // Scopes required for OneDrive
-        account: account,
-      });
-      this.tokenResponse = acquiredToken;
-      return acquiredToken;
+      console.log('Account found:', account);
+      // const acquiredToken = await this.msalInstance.acquireTokenSilent({
+      //   // scopes: ["openid", "profile"]
+      //   scopes: ['User.Read', 'Files.Read.All'], // Scopes required for OneDrive
+      //   // scopes : ['User.Read', 'Files.Read', 'Files.ReadWrite', 'Files.Read.All', 'Files.ReadWrite.All'],
+      //   account: account,
+      // });
+      // this.tokenResponse = acquiredToken;
+      return account;
     } catch (error) {
       console.error('Error acquiring token:', error);
       return null;

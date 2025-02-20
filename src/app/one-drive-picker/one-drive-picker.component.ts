@@ -1,3 +1,4 @@
+import { environment } from './../../environments/environment';
 import { Component, OnInit } from '@angular/core';
 import { MsalService } from '../services/msal.service';
 
@@ -32,30 +33,20 @@ export class OneDrivePickerComponent implements OnInit {
       return;
     }
 
-
-    // Fetch the token before opening the picker
-    this.msalService.fetchToken().then((data: any) => {
-      if (data) {
-        this.launchOneDrivePicker(data?.idToken);
-        console.log('Token fetched:', data);
-      }
-
-    }).catch((error) => {
-      console.error('Failed to fetch token:', error);
-    });
+    this.launchOneDrivePicker(userAccount?.idToken);
   }
 
 
   launchOneDrivePicker(accessToken?: string) {
-    console.log('OneDrive', OneDrive);
-    console.log('accessToken:', accessToken);
+    const {clientId, oneDriveApi} = environment;
+    
     OneDrive.open({
-      clientId: '', // SPA Client ID
+      clientId,
       action: 'query', // Action for picker query,  share,  download
       accessToken: accessToken,
       multiSelect: false,
       advanced: {
-        endpointHint: "api.onedrive.com",
+        endpointHint: oneDriveApi,
       },
       // advanced: {
       //   redirectUri: "http://localhost:4200",

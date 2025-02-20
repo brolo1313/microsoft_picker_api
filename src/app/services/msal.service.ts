@@ -37,34 +37,9 @@ export class MsalService {
     }
   }
 
-  async fetchToken() {
-    try {
-      const account = this.getAccount();
-      if (!account) {
-        console.error('No active account found');
-        return null;
-      }
-
-      console.log('Account found:', account);
-      // const acquiredToken = await this.msalInstance.acquireTokenSilent({
-      //   // scopes: ["openid", "profile"]
-      //   scopes: ['User.Read', 'Files.Read.All'], // Scopes required for OneDrive
-      //   // scopes : ['User.Read', 'Files.Read', 'Files.ReadWrite', 'Files.Read.All', 'Files.ReadWrite.All'],
-      //   account: account,
-      // });
-      // this.tokenResponse = acquiredToken;
-      return account;
-    } catch (error) {
-      console.error('Error acquiring token:', error);
-      return null;
-    }
-  }
-  
-
   getAccount() {
     const accounts = this.msalInstance.getAllAccounts();
     return accounts.length > 0 ? accounts[0] : null;
-
   }
 
   logout() {

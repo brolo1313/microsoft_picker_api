@@ -1,6 +1,8 @@
+import { environment } from './../../environments/environment';
+
 export const msalConfig = {
   auth: {
-    clientId: '', // spa
+    clientId: environment.clientId, // spa
     authority: 'https://login.microsoftonline.com/common',
     redirectUri: 'http://localhost:4200',
   },

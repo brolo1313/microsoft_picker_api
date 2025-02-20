@@ -1,5 +1,5 @@
 import { environment } from './../../environments/environment';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MsalService } from '../services/msal.service';
 
 declare const OneDrive: any;
@@ -11,7 +11,15 @@ declare const OneDrive: any;
   styleUrl: './one-drive-picker.component.scss'
 })
 export class OneDrivePickerComponent {
-  constructor(private msalService: MsalService) { }
+  private accessToken!: string | null;
+  constructor(private msalService: MsalService) {
+    this.getAccessToken();
+  }
+
+  getAccessToken() {
+    this.accessToken = localStorage.getItem('accessToken');
+    return this.accessToken;
+  }
 
   openPicker() {
     const userAccount = this.msalService.getAccount();
@@ -23,11 +31,12 @@ export class OneDrivePickerComponent {
     }
 
     console.log('User account:', userAccount);
-    this.launchOneDrivePicker(userAccount?.idToken);
+    this.getAccessToken();
+    this.launchOneDrivePicker(this.accessToken);
   }
 
 
-  launchOneDrivePicker(accessToken?: string) {
+  launchOneDrivePicker(accessToken?: string | null) {
     const { clientId, oneDriveApi } = environment;
 
     console.log('accessToken:', accessToken);
@@ -46,14 +55,12 @@ export class OneDrivePickerComponent {
       // filter:"folder,.pptx,.jpeg,.jpg",
       success: (response: any) => {
         console.log('Share response:', response);
-        
-      // Отримуємо shareId з відповіді
-      const shareId = response.value?.[0]?.permissions?.[0]?.shareId;
 
-      // Формуємо посилання для скачування
-      const downloadUrl = `https://api.onedrive.com/v1.0/shares/${shareId}/root/content`;
+        const shareId = response.value?.[0]?.permissions?.[0]?.shareId;
 
-      console.log('Download URL:', downloadUrl);
+        const downloadUrl = `https://api.onedrive.com/v1.0/shares/${shareId}/root/content`;
+
+        console.log('Download URL:', downloadUrl);
       },
       cancel: () => {
         console.log('Picker was closed');
@@ -64,7 +71,6 @@ export class OneDrivePickerComponent {
       },
     });
   }
-// https://api.onedrive.com/v1.0/shares/u!aHR0cHM6Ly8xZHJ2Lm1zL2IvYy9kNzI4N2Y2MmUxMzA5NGYyL0VmS1VNT0ZpZnlnZ2dOZENBd0FBQUFBQlh5NEk3Mkl1ZzI0UnlReUl4V016WWc/root/content
   logout() {
     const account = this.msalService.getAccount();
     if (!account) {

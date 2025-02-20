@@ -8,12 +8,9 @@ import { msalConfig } from '../configs/msal-config';
 export class MsalService {
   private msalInstance: Msal.PublicClientApplication;
 
-  private tokenResponse: any;
   constructor() {
-    // Ініціалізація MSAL
     this.msalInstance = new Msal.PublicClientApplication(msalConfig);
 
-    // Додаткові налаштування, якщо потрібно, наприклад, для автентифікації
     this.msalInstance.initialize().then(() => {
       console.log('MSAL initialized successfully');
     }).catch((error) => {
@@ -36,6 +33,7 @@ export class MsalService {
           ],
         })
         .then((response) => {
+          localStorage.setItem('accessToken', response.accessToken);
           console.log('Logged in successfully:', response);
           console.log('this.msalInstance', this.msalInstance);
         })

@@ -25,8 +25,16 @@ export class MsalService {
     if (!this.msalInstance.getAllAccounts().length) {
       this.msalInstance
         .loginPopup({
-          scopes: ['User.Read', 'Files.Read.All'],
-        })  // Використовуємо попап для логіну
+          // scopes: ['User.Read', 'Files.Read.All'],
+          scopes: [
+            'Files.Read',
+            'Files.ReadWrite',
+            'Files.Read.All',
+            'Files.ReadWrite.All',
+            'Sites.Read.All',
+            'Sites.ReadWrite.All'
+          ],
+        })
         .then((response) => {
           console.log('Logged in successfully:', response);
           console.log('this.msalInstance', this.msalInstance);

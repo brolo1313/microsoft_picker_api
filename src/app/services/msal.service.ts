@@ -6,7 +6,7 @@ import { msalConfig } from '../configs/msal-config';
   providedIn: 'root',
 })
 export class MsalService {
-  public  msalInstance: Msal.PublicClientApplication;
+  public msalInstance: Msal.PublicClientApplication;
 
   constructor() {
     this.msalInstance = new Msal.PublicClientApplication(msalConfig);
@@ -22,20 +22,16 @@ export class MsalService {
     if (!this.msalInstance.getAllAccounts().length) {
       this.msalInstance
         .loginPopup({
-          // scopes: ['User.Read', 'Files.Read.All'],
           scopes: [
             'Files.Read',
             'Files.ReadWrite',
             'Files.Read.All',
             'Files.ReadWrite.All',
-            'Sites.Read.All',
-            'Sites.ReadWrite.All'
           ],
         })
         .then((response) => {
           localStorage.setItem('accessToken', response.accessToken);
           console.log('Logged in successfully:', response);
-          console.log('this.msalInstance', this.msalInstance);
         })
         .catch((error) => {
           console.log('Login failed:', error);
@@ -48,25 +44,26 @@ export class MsalService {
     return accounts.length > 0 ? accounts[0] : null;
   }
 
-  async  getAccessToken() {
-    try {
-      const accounts = this.msalInstance.getAllAccounts();
-      if (accounts.length === 0) {
-        console.error("❌ Користувач не авторизований");
-        return null;
-      }
+  // async getAccessToken() {
+  //   try {
+  //     const accounts = this.msalInstance.getAllAccounts();
+  //     if (accounts.length === 0) {
+  //       console.error("❌ Користувач не авторизований");
+  //       return null;
+  //     }
   
-      const tokenResponse = await this.msalInstance.acquireTokenSilent({
-        account: accounts[0],
-        scopes: ["Files.Read.All"] 
-      });
+  //     const tokenResponse = await this.msalInstance.acquireTokenSilent({
+  //       account: accounts[0],
+  //       scopes: ["Files.Read.All", "Files.ReadWrite.All"], // Склопи для доступу до OneDrive
+  //     });
   
-      return tokenResponse.accessToken;
-    } catch (error) {
-      console.error("❌ Помилка отримання токена:", error);
-      return null;
-    }
-  }
+  //     return tokenResponse.accessToken;
+  //   } catch (error) {
+  //     console.error("❌ Помилка отримання токена:", error);
+  //     return null;
+  //   }
+  // }
+  
 
   logout() {
     const account = this.getAccount();

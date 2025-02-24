@@ -6,7 +6,7 @@ import { msalConfig } from '../configs/msal-config';
   providedIn: 'root',
 })
 export class MsalService {
-  private msalInstance: Msal.PublicClientApplication;
+  public  msalInstance: Msal.PublicClientApplication;
 
   constructor() {
     this.msalInstance = new Msal.PublicClientApplication(msalConfig);
@@ -46,6 +46,26 @@ export class MsalService {
   getAccount() {
     const accounts = this.msalInstance.getAllAccounts();
     return accounts.length > 0 ? accounts[0] : null;
+  }
+
+  async  getAccessToken() {
+    try {
+      const accounts = this.msalInstance.getAllAccounts();
+      if (accounts.length === 0) {
+        console.error("❌ Користувач не авторизований");
+        return null;
+      }
+  
+      const tokenResponse = await this.msalInstance.acquireTokenSilent({
+        account: accounts[0],
+        scopes: ["Files.Read.All"] // ✅ Обов’язковий дозвіл для завантаження файлів
+      });
+  
+      return tokenResponse.accessToken;
+    } catch (error) {
+      console.error("❌ Помилка отримання токена:", error);
+      return null;
+    }
   }
 
   logout() {

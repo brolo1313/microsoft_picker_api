@@ -43,7 +43,7 @@ export class OneDrivePickerComponent {
     OneDrive.open({
       clientId,
       action: 'share', // Action for picker query,  share,  download
-      accessToken: `Bearer ${accessToken}`,
+      accessToken,
       multiSelect: false,
       advanced: {
         endpointHint: oneDriveApi,
@@ -57,8 +57,7 @@ export class OneDrivePickerComponent {
         console.log('Share response:', response);
 
         const shareId = response.value?.[0]?.permissions?.[0]?.shareId;
-
-        const downloadUrl = `https://api.onedrive.com/v1.0/shares/${shareId}/root/content`;
+        const downloadUrl = `https://api.onedrive.com/v1.0/shares/${shareId}`;
 
         console.log('Download URL:', downloadUrl);
       },
@@ -71,6 +70,11 @@ export class OneDrivePickerComponent {
       },
     });
   }
+
+
+  // webUrl: "https://onedrive.live.com?cid=D7287F62E13094F2&id=D7287F62E13094F2!834"
+  // https://1drv.ms/b/c/d7287f62e13094f2/EfKUMOFifygggNdCAwAAAAABeTfAuhFvEx8wu4SZ5IzYZw
+  // https://api.onedrive.com/v1.0/shares/u!aHR0cHM6Ly8xZHJ2Lm1zL2IvYy9kNzI4N2Y2MmUxMzA5NGYyL0VmS1VNT0ZpZnlnZ2dOZENBd0FBQUFBQlh5NEk3Mkl1ZzI0UnlReUl4V016WWc/root/content
   logout() {
     const account = this.msalService.getAccount();
     if (!account) {

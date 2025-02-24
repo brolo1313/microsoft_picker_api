@@ -11,6 +11,6 @@ export const msalConfig = {
     storeAuthStateInCookie: false
   },
   authRequest: {
-    scopes: ['User.Read', 'Files.Read.All'], // Потрібні scope
+    scopes: ['User.Read', 'Files.Read.All'], // needed scopes
   },
 };

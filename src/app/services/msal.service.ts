@@ -58,7 +58,7 @@ export class MsalService {
   
       const tokenResponse = await this.msalInstance.acquireTokenSilent({
         account: accounts[0],
-        scopes: ["Files.Read.All"] // ✅ Обов’язковий дозвіл для завантаження файлів
+        scopes: ["Files.Read.All"] 
       });
   
       return tokenResponse.accessToken;
@@ -73,6 +73,7 @@ export class MsalService {
     if (account) {
       this.msalInstance.logoutPopup().then(() => {
         console.log('Logged out successfully');
+        localStorage.clear();
       }).catch((error) => {
         console.log('Logout failed', error);
       });

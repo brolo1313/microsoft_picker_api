@@ -12,10 +12,10 @@ export const msalConfig = {
   },
   authRequest: {
     scopes: [
-      "https://graph.microsoft.com/Files.Read.All",
-      "https://graph.microsoft.com/Files.ReadWrite.All",
-      "https://graph.microsoft.com/Sites.Read.All",
-      "https://graph.microsoft.com/Sites.ReadWrite.All"
+      'openid', 'profile', 'offline_access',
+      'Files.Read', 'Files.ReadWrite', 'Files.Read.All', 'Files.ReadWrite.All',
+      'Sites.Read.All', 'Sites.ReadWrite.All'
     ],
   },
+  // responseType: 'token',
 };

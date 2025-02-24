@@ -44,7 +44,7 @@ export class OneDrivePickerComponent {
     OneDrive.open({
       clientId,
       action: 'share', // Action for picker query,  share,  download
-      accessToken: `${'Bearer '}${accessToken}`,
+      // accessToken: `${'Bearer '}${accessToken}`,
       multiSelect: false,
       advanced: {
         endpointHint: oneDriveApi,
@@ -57,21 +57,8 @@ export class OneDrivePickerComponent {
       success: (response: any) => {
         console.log('Share response:', response);
 
-        // const shareId = response.value?.[0]?.permissions?.[0]?.shareId;
-        // const downloadUrl = `https://api.onedrive.com/v1.0/shares/${shareId}`;
-
-        const webUrl = response.value?.[0]?.webUrl;
-        if (!webUrl) {
-          console.error('No webUrl found in response');
-          return;
-        }
-
-        // Витягуємо `cid`
-        const downloadUrl = this.generateDownloadUrl(webUrl);
-
-
-        // Формуємо direct download URL
-        // const downloadUrl = `https://api.onedrive.com/v1.0/shares/u!${encodeURIComponent(cid)}!0/root/content`;
+        const shareId = response.value?.[0]?.permissions?.[0]?.shareId;
+        const downloadUrl = `https://api.onedrive.com/v1.0/shares/${shareId}/root/content`;
 
         console.log('Download URL:', downloadUrl);
 
@@ -94,8 +81,7 @@ export class OneDrivePickerComponent {
       const response = await fetch(downloadUrl, {
         method: "GET",
         headers: {
-          "Authorization": `Bearer ${accessToken}`, // 🔥 Додаємо токен у заголовок
-          "Content-Type": "application/json"
+          "Authorization": `bearer ${accessToken}`,
         }
       });
   

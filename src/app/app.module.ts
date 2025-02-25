@@ -15,7 +15,7 @@ import { MsalService } from './services/msal.service';
     BrowserModule,
     AppRoutingModule
   ],
-  providers: [MsalService],
+  // providers: [MsalService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

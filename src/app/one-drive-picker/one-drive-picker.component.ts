@@ -73,19 +73,18 @@ export class OneDrivePickerComponent {
   //   OneDrive.open({
   //     clientId,
   //     action: 'query',  // 'share' or 'download' - you can choose as needed
-  //     // accessToken: `Bearer ${accessToken}`, 
   //     multiSelect: false,
   //     advanced: {
-  //       endpointHint: oneDriveApi,
+  //       accessToken: accessToken, 
+  //       createLinkParameters: { type: 'view', scope: 'anonymous' },
   //     },
-  //     createLinkParameters: { type: 'view', scope: 'anonymous' },
   //     success: (response: any) => {
   //       console.log('File selected:', response);
   
-  //       const shareId = response.value?.[0]?.permissions?.[0]?.shareId;
-  //       const fileUrl = `https://graph.microsoft.com/v1.0/shares/${shareId}/root/content`;
+  //       // const shareId = response.value?.[0]?.permissions?.[0]?.shareId;
+  //       // const fileUrl = `https://graph.microsoft.com/v1.0/shares/${shareId}/root/content`;
   
-  //       console.log('Download URL:', fileUrl);
+  //       // console.log('Download URL:', fileUrl);
   
   //       // this.fetchOneDriveFile(fileUrl, accessToken);
   //     },

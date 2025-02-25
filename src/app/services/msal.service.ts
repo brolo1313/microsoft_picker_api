@@ -30,7 +30,8 @@ export class MsalService {
           ],
         })
         .then((response) => {
-          localStorage.setItem('accessToken', response.accessToken);
+          // localStorage.setItem('accessToken', response.accessToken);
+          this.getAccessToken();
           console.log('Logged in successfully:', response);
         })
         .catch((error) => {
@@ -44,25 +45,27 @@ export class MsalService {
     return accounts.length > 0 ? accounts[0] : null;
   }
 
-  // async getAccessToken() {
-  //   try {
-  //     const accounts = this.msalInstance.getAllAccounts();
-  //     if (accounts.length === 0) {
-  //       console.error("❌ Користувач не авторизований");
-  //       return null;
-  //     }
+  async getAccessToken() {
+    try {
+      const accounts = this.msalInstance.getAllAccounts();
+      if (accounts.length === 0) {
+        console.error("❌ Користувач не авторизований");
+        return null;
+      }
   
-  //     const tokenResponse = await this.msalInstance.acquireTokenSilent({
-  //       account: accounts[0],
-  //       scopes: ["Files.Read.All", "Files.ReadWrite.All"], // Склопи для доступу до OneDrive
-  //     });
-  
-  //     return tokenResponse.accessToken;
-  //   } catch (error) {
-  //     console.error("❌ Помилка отримання токена:", error);
-  //     return null;
-  //   }
-  // }
+      const tokenResponse = await this.msalInstance.acquireTokenSilent({
+        account: accounts[0],
+        // scopes: ["Files.Read.All", "Files.ReadWrite.All"], 
+        scopes: ["https://graph.microsoft.com/.default"],
+      });
+      
+      localStorage.setItem('accessToken', tokenResponse.accessToken);
+      return tokenResponse.accessToken;
+    } catch (error) {
+      console.error("❌ Помилка отримання токена:", error);
+      return null;
+    }
+  }
   
 
   logout() {

@@ -11,6 +11,7 @@ declare const OneDrive: any;
 export class OneDrivePickerComponent {
   title = 'onedrive-picker';
 
+  // 18f24b04-fc0b-49b9-9e60-b797818d090e not my client id
   launchOneDrivePicker() {
     const odOptions = {
       clientId: "18f24b04-fc0b-49b9-9e60-b797818d090e", 
